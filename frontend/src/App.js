@@ -20,6 +20,23 @@ function App() {
     fetchEvents();
   }, []);
 
+  // Add a new event
+  const addEvent = (event) => {
+    setEvents((prev) => [...prev, event]);
+  };
+
+  // Update event (drag or modal edit)
+  const updateEvent = (updatedEvent) => {
+    setEvents((prev) =>
+      prev.map((e) => (e.id === updatedEvent.id ? updatedEvent : e))
+    );
+  };
+
+  // Remove event after deletion
+  const removeEvent = (id) => {
+    setEvents((prev) => prev.filter((e) => e.id !== id));
+  };
+
   return (
     <div style={{ padding: 20 }}>
       <h1>Calendar App</h1>
