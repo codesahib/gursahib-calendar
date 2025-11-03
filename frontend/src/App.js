@@ -1,23 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+
+export const ENDPOINT = "http://127.0.0.1:8000";
 
 function App() {
+  const [events, setEvents] = useState([]);
+
+  // Fetch all events from backend
+  const fetchEvents = async () => {
+    try {
+      const res = await fetch(`${ENDPOINT}/api/events/`);
+      const data = await res.json();
+      setEvents(data);
+    } catch (err) {
+      console.error("Failed to fetch events:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ padding: 20 }}>
+      <h1>Calendar App</h1>
+      {events}
     </div>
   );
 }
