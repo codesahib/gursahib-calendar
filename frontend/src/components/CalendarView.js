@@ -57,7 +57,7 @@ function CalendarView({ events, updateEvent, removeEvent }) {
   };
 
   // Called when user drags an event to a new time slot
-  const handleEventDrop = async ({ event, start, end }) => {
+  const handleEventDropAndResize = async ({ event, start, end }) => {
     const updatedEvent = {
       id: event.id,
       title: event.title,
@@ -76,11 +76,6 @@ function CalendarView({ events, updateEvent, removeEvent }) {
     }
 
     updateEvent(updatedEvent);
-  };
-
-  // Prevent resizing behavior on day view (user can edit instead)
-  const handleEventResize = (resizeInfo) => {
-    if (currentView !== "day") handleEventDrop(resizeInfo);
   };
 
   // Called when user deletes an event from modal
@@ -138,14 +133,14 @@ function CalendarView({ events, updateEvent, removeEvent }) {
         endAccessor="end"
         titleAccessor="title"
         style={{ height: "100%" }}
-        views={["month", "week"]}
+        views={["month", "week", "day"]}
         view={currentView}
         onView={setCurrentView}
         date={currentDate}
         onNavigate={setCurrentDate}
         draggableAccessor={() => true}
-        onEventDrop={handleEventDrop}
-        onEventResize={handleEventResize}
+        onEventDrop={handleEventDropAndResize}
+        onEventResize={handleEventDropAndResize}
         onSelectEvent={openModal}
         popup
         components={{
