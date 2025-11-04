@@ -27,34 +27,24 @@ function CalendarView({ events, updateEvent, removeEvent }) {
     end: utcToZonedTime(event.end_time, timezone),
   }));
 
-  // Handles how each event looks in the calendar
-  const EventComponent = ({ event, view }) => {
-    const timeFmt = "h:mm a";
-    const startTime = format(event.start, timeFmt);
-    const endTime = new Intl.DateTimeFormat("en-US", {
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-      timeZoneName: "short",
-    }).format(event.end);
+    // Handles how each event looks in the calendar
+    const EventComponent = ({ event, view }) => {
+        const timeFmt = "h:mm a";
+        const startTime = format(event.start, timeFmt);
+        const endTime = new Intl.DateTimeFormat("en-US", {
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true,
+        timeZoneName: "short",
+        }).format(event.end);
 
-    if (view === "month") {
-      return (
-        <span>
-          {event.title} <br /> {startTime}-{endTime}
-        </span>
-      );
+        return (
+            <span>
+            {event.title} <br /> {startTime}-{endTime}
+            </span>
+        );
     }
 
-    return (
-      <div style={{ lineHeight: 1.2 }}>
-        <div style={{ fontWeight: 600 }}>{event.title}</div>
-        <div style={{ fontSize: "0.8em", opacity: 0.8 }}>
-          {startTime} - {endTime}
-        </div>
-      </div>
-    );
-  };
 
   // Called when user drags an event to a new time slot
   const handleEventDropAndResize = async ({ event, start, end }) => {
