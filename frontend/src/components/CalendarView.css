@@ -1,0 +1,8 @@
+.rbc-event-label {
+  visibility: hidden !important;
+}
+
+.rbc-resize-handle {
+  display: none !important;
+  cursor: default !important;
+}

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import EventForm from "./components/EventForm";
+import CalendarView from "./components/CalendarView";
 
 export const ENDPOINT = "http://127.0.0.1:8000";
 
@@ -42,6 +43,11 @@ function App() {
     <div style={{ padding: 20 }}>
       <h1>Calendar App</h1>
       <EventForm addEvent={addEvent} />
+      <CalendarView
+        events={events}
+        updateEvent={updateEvent}
+        removeEvent={removeEvent}
+      />
     </div>
   );
 }
