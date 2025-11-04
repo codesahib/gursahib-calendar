@@ -11,8 +11,10 @@ function EventForm({ addEvent }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Basic sanity check before doing anything expensive
     if (!title || !start || !end) return;
 
+    // Make sure user doesn’t create backwards events
     if (new Date(start) > new Date(end)) {
       setError("Start time must be before or equal to end time.");
       return;
@@ -20,21 +22,30 @@ function EventForm({ addEvent }) {
 
     setError("");
 
+    // Convert local time inputs to UTC for consistent storage
     const startUtc = zonedTimeToUtc(new Date(start), Intl.DateTimeFormat().resolvedOptions().timeZone);
     const endUtc = zonedTimeToUtc(new Date(end), Intl.DateTimeFormat().resolvedOptions().timeZone);
 
-    const response = await fetch(`${ENDPOINT}/api/events/`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        title,
-        start_time: startUtc.toISOString(),
-        end_time: endUtc.toISOString(),
-      }),
-    });
+    try {
+      // Push new event to backend
+      const response = await fetch(`${ENDPOINT}/api/events/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title,
+          start_time: startUtc.toISOString(),
+          end_time: endUtc.toISOString(),
+        }),
+      });
 
-    const data = await response.json();
-    addEvent(data);
+      if (!response.ok) throw new Error("Failed to create event");
+
+      const data = await response.json();
+      addEvent(data);
+    } catch (err) {
+      setError("Something went wrong. Try again.");
+      return;
+    }
 
     setTitle("");
     setStart("");
@@ -42,7 +53,10 @@ function EventForm({ addEvent }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ marginBottom: "20px", display: "flex", gap: "10px", alignItems: "center" }}>
+    <form
+      onSubmit={handleSubmit}
+      style={{ marginBottom: "20px", display: "flex", gap: "10px", alignItems: "center" }}
+    >
       <input
         type="text"
         placeholder="Event Title"
